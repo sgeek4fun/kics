@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+{% block page_header %}{{ title }}{% endblock page_header %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+const simplemde = new SimpleMDE({
+  spellChecker: false
+});
+</script>
+<script type="text/javascript">
+  const form = document.querySelector('#form');
+  const previewBtn = document.querySelector('#preview');
+  const saveBtn = document.querySelector('#save');
+
+  saveBtn.addEventListener('click', e => {
+    e.preventDefault();
+    form.action = '';
+    form.target = '';
+    form.submit();
+  })
+
+  previewBtn.addEventListener('click', e => {
+    e.preventDefault();
+    form.action = form.dataset.preview;
+    form.target = '_blank'
+    form.submit();
+  })
+</script>
+{% endblock js %}
+
+
+{% block content %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Post</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this post?
+      </div>
+      <div class="modal-footer">
+        <a type="" href="{{ url_for('blog.post_delete', slug=post.slug) }}" class="btn btn-danger">Yes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="col-md-8 offset-md-2">
+    <form id="form" action="" data-preview="{{ url_for('blog.post_preview') }}" method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control {% if errors.title %}is-invalid{% endif %}" name="title" id="title" value="{{ post.title }}">
+        <div class="invalid-feedback">{{ errors.title }}</div>  
+      </div>
+      <div class="mb-3">
+        <label for="image" class="form-label">Image</label>
+        {% if post.image %}
+        <span class="d-block text-muted fs-5">uploaded: <a href="{{ url_for('uploads', filename=post.image) }}">{{ url_for('uploads', filename=post.image) }}</a></span>
+        {% endif %}
+        <input type="file" class="form-control {% if errors.image %}is-invalid{% endif %}" name="image" id="image" value="{{ post.image }}">
+        <div class="invalid-feedback">{{ errors.image }}</div>  
+      </div>
+      <div class="mb-3">
+        <label for="body" class="form-label">Body</label>
+        <textarea id="editor" rows="10" class="form-control {% if errors.body %}is-invalid{% endif %}" name="body" id="body">{{ post.body }}</textarea> 
+        <div class="invalid-feedback">{{ errors.body }}</div>
+      </div>
+      <div class="mb-3">
+        <label for="tags" class="form-label">Tags</label>
+        <input type="text" name="tags" id="tags" class="form-control {% if errors.tags %}is-invalid{% endif %}" value="{{ ','.join(tags) }}">
+        <span class="fs-6 text-muted">Separate each tag with ,</span>
+        <div class="invalid-feedback">{{ errors.tags }}</div>
+      </div>
+      <div class="mb-3">
+        <label for="publish" class="form-label">Publish</label>
+        <input type="date" name="publish" id="publish" class="form-control" value="{{ post.publish }}">  
+      </div>
+      <hr>
+      <button id="save" type="submit" class="btn btn-primary btn-lg float-start">Save post</button>
+      <button id="preview" class="btn btn-light btn-lg ms-3 float-start">Preview</button>
+    </form>
+    {% if 'edit' in request.path %}
+      <button class="btn btn-danger btn-lg float-end" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button>
+    {% endif %}
+    <div class="clearfix"></div>
+  </div>
+</div>
+{% endblock content %}
+

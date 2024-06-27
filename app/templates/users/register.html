@@ -1,0 +1,36 @@
+<!-- prettier-ignore -->
+{% extends 'layout.html' %} 
+
+{% block page_header %}<h1 class="display-4">Register</h1>{% endblock page_header %}
+{% block content %}
+<div class="container mt-md-5 mt-3">
+  <div class="col-md-6 offset-3">
+    <form action="" method="post">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" name="username" id="username" class="form-control {% if errors.username %}is-invalid{% endif %}" />
+        <div class="invalid-feedback">{{ errors.username }}</div>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" name="email" id="email" class="form-control {% if errors.email %}is-invalid{% endif %}" />
+        <div class="invalid-feedback">{{ errors.email }}</div>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          name="password"
+          id="password"
+          class="form-control {% if errors.password %}is-invalid{% endif %}"
+        />
+        <div class="invalid-feedback">{{ errors.password }}</div>
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary btn-lg">Create account</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,78 @@
+<!-- prettier-ignore -->
+{% extends 'layout.html' %}
+
+{% block content %}
+<section class="mt-4">
+<div class="container">
+  <div class="col-md-4 offset-md-4">
+    <form action="">
+      <div class="input-group mb-3">
+        <input type="text" name="q" id="q" value="{{ request.args.q }}" placeholder="Find post" class="form-control">
+        <button class="btn btn-primary"><i class="bi bi-search"></i></button>
+      </div>
+    </form>
+  </div>
+  {% if posts|length == 0 %}
+  <div class="text-center fs-4">No posts</div>
+  {% else %}
+  <div class="col-md-8 offset-md-2">
+    {% for post in posts %}
+    <div class="row align-items-center">
+      <div class="col-md-4">
+        <img src="{{ url_for('uploads', filename=post.image)}}" alt="image" class="img-fluid rounded">
+      </div>
+      <div class="col-md-8">
+        <article>
+          <h2 class="text-capitalize fw-bold">
+            {% set post_url = url_for('blog.post_detail', slug=post.slug) %}
+            <a href="{{ post_url }}" class="text-decoration-none">{{post.title}}</a>
+          </h2>
+          <div class="text-muted fs-6 text-uppercase">
+          {% if post.publish and post.publish <= date %}
+            {{post.publish|dateformat}}
+          {% endif  %}
+
+          {% if not post.publish %}
+          <div class=" badge border border-danger border-2 text-danger"><i class="bi bi-pen"></i>draft</div>
+          {% endif %}
+            
+          {% if post.publish and (post.publish > date) %}
+            <div class="badge border border-dark border-2 text-dark">
+             <i class="bi bi-clock"></i> scheduled
+            </div>
+          {% endif %}
+          </div>
+          <p>{{post.body|markdown|striptags|truncate}}</p>
+          <div class="mb-3">
+            <a href="{{ post_url }}" class="btn btn-primary">Read more <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </article>
+      </div>
+    </div>
+    <hr>
+    {% endfor %}
+    {% if paginator.page_num > 1 %}
+    {% set search = request.args.q %}
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" {% if paginator.prev_page > 0 %}href="{{ url_for('blog.posts') }}?page={{ paginator.prev_page }}{% if search %}&q={{ search }}{% endif %}"{% endif %} aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        {% for page in paginator.pages %}
+        <li class="page-item"><a class="page-link {% if page == paginator.page %}active{% endif %}" href="{{ url_for('blog.posts') }}?page={{ page }}{% if search %}&q={{ search }}{% endif %}">{{ page }}</a></li>
+        {% endfor %}
+        <li class="page-item">
+          <a class="page-link" {% if paginator.page_num > paginator.page %}href="{{ url_for('blog.posts') }}?page={{ paginator.next_page }}{% if search %}&q={{ search }}{% endif %}"{% endif %} aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+</section>
+{% endblock content %}

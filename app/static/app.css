@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;700&display=swap');
+body {
+  font-family: 'Noto Sans', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-size: 18px;
+}
+
+.showcase {
+  position: relative;
+  height: 40vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  z-index: 1;
+}
+.showcase::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: #000; 
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+  background: linear-gradient(to left, #ff0404, #fe0dbe);
+  z-index: -1;
+}
+
+.avatar {
+  background: #ccc;
+  width: 65px;
+  height: 65px;
+}
+
+.imgs1{
+  position: fixed;
+  left: 0px;
+  padding-top: 20px;
+}
+.h1b12{
+  padding: 50px;
+}
+.banner123{
+  padding-top: 50px;
+}
+.codehilite {
+  border-radius: 10px;
+}
+pre {
+  padding: 1rem;
+}
